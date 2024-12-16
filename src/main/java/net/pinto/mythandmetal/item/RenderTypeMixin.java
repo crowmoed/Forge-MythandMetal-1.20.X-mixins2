@@ -1,4 +1,4 @@
-package net.pinto.mythandmetal.item.customfun;
+package net.pinto.mythandmetal.item;
 
 
 import com.mojang.blaze3d.platform.GlStateManager;
@@ -10,7 +10,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.resources.ResourceLocation;
 import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;

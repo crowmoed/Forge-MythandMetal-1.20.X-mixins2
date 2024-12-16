@@ -27,7 +27,7 @@ import net.pinto.mythandmetal.block.ModBlocks;
 import net.pinto.mythandmetal.item.ModCreativeModeTabs;
 import net.pinto.mythandmetal.item.ModItems;
 
-import net.pinto.mythandmetal.item.customfun.RenderTypeMixin;
+import net.pinto.mythandmetal.item.RenderTypeMixin;
 import net.pinto.mythandmetal.worldgen.biome.modoverworldregion.ashOverworldRegion;
 import net.pinto.mythandmetal.worldgen.biome.modoverworldregion.enchantedOverworldRegion;
 import net.pinto.mythandmetal.worldgen.biome.surface.ModSurfaceRules;
@@ -99,7 +99,11 @@ public class MythandMetal
             ItemProperties.register(item, new ResourceLocation(MOD_ID, "enchanted"), (stack, world, living, seed) -> stack.isEnchanted() ? 1.0F : 0.0F);
         }
 
-
+        try {
+            RenderTypeMixin.createstuff(null); // Ensure this is called before any vertex buffers are created
+        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
 
 
             Regions.register(new ashOverworldRegion(new ResourceLocation(MOD_ID,"ash_forest"),1));

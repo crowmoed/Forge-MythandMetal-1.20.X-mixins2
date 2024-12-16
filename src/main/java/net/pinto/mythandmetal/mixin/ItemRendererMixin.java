@@ -17,7 +17,7 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HalfTransparentBlock;
 import net.minecraft.world.level.block.StainedGlassPaneBlock;
-import net.pinto.mythandmetal.item.customfun.RenderTypeMixin;
+import net.pinto.mythandmetal.item.RenderTypeMixin;
 import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -84,11 +84,7 @@ public abstract class ItemRendererMixin {
 
     @Inject(method = "render",at = @At("HEAD"))
     private void injectgetFoilBuffer(ItemStack pItemStack, ItemDisplayContext pDisplayContext, boolean pLeftHand, PoseStack pPoseStack, MultiBufferSource pBuffer, int pCombinedLight, int pCombinedOverlay, BakedModel pModel, CallbackInfo ci) {
-        try {
-            RenderTypeMixin.createstuff(null); // Ensure this is called before any vertex buffers are created
-        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
+
         if (!pItemStack.isEmpty()) {
             pPoseStack.pushPose();
             boolean flag = pDisplayContext == ItemDisplayContext.GUI || pDisplayContext == ItemDisplayContext.GROUND || pDisplayContext == ItemDisplayContext.FIXED;
@@ -127,12 +123,12 @@ public abstract class ItemRendererMixin {
                             } else {
                                 vertexconsumer = getCompassFoilBuffer(pBuffer, rendertype, posestack$pose);
                             }
-
+                            vertexconsumer = getCompassFoilBufferDirect(pBuffer, rendertype, posestack$pose);
                             pPoseStack.popPose();
                         }
                         else if (flag1 &&  (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.UNBREAKING, pItemStack) > 0)){
 
-                                vertexconsumer = getUncFoilBufferDirect(pBuffer, rendertype, true, pItemStack.hasFoil());
+                                vertexconsumer = getFoilBufferDirect(pBuffer, rendertype, true, pItemStack.hasFoil());
 
                         }
                         else if (flag1) {
@@ -145,7 +141,7 @@ public abstract class ItemRendererMixin {
                         else {
                             vertexconsumer = getFoilBuffer(pBuffer, rendertype, true, pItemStack.hasFoil());
                         }
-
+                        System.out.println("VertexConsumer: " + vertexconsumer);
                         this.renderModelLists(model, pItemStack, pCombinedLight, pCombinedOverlay, pPoseStack, vertexconsumer);
                     }
                 }
@@ -166,8 +162,6 @@ public abstract class ItemRendererMixin {
 
 
     }
-
-
 
 
 
@@ -214,19 +208,7 @@ public abstract class ItemRendererMixin {
 
 
 
-    private static RenderType createCustomRenderType(String name, VertexFormat format, VertexFormat.Mode mode, int bufferSize, RenderType.CompositeState compositeState) {
-        try {
-            // Access the private create method via reflection
-            Method createMethod = RenderType.class.getDeclaredMethod("create", String.class, VertexFormat.class, VertexFormat.Mode.class, int.class, RenderType.CompositeState.class);
-            createMethod.setAccessible(true);  // Make the method accessible
 
-            // Call the create method
-            return (RenderType) createMethod.invoke(null, name, format, mode, bufferSize, compositeState);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
 
 
 
