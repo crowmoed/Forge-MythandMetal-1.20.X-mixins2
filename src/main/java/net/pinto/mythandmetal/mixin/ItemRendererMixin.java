@@ -17,9 +17,9 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HalfTransparentBlock;
 import net.minecraft.world.level.block.StainedGlassPaneBlock;
+import net.pinto.mythandmetal.item.customfun.RenderTypeMixin;
 import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -65,10 +65,6 @@ public abstract class ItemRendererMixin {
 
 
 
-    private static final ResourceLocation UNCENCHANTED_GLINT_ENTITY = new ResourceLocation("textures/misc/enchanted_glint_entity.png");
-    private static final ResourceLocation UNCENCHANTED_GLINT_ITEM = new ResourceLocation("textures/misc/enchanted_glint_item.png");
-
-
 
 
     private final Minecraft minecraft;
@@ -88,6 +84,11 @@ public abstract class ItemRendererMixin {
 
     @Inject(method = "render",at = @At("HEAD"))
     private void injectgetFoilBuffer(ItemStack pItemStack, ItemDisplayContext pDisplayContext, boolean pLeftHand, PoseStack pPoseStack, MultiBufferSource pBuffer, int pCombinedLight, int pCombinedOverlay, BakedModel pModel, CallbackInfo ci) {
+        try {
+            RenderTypeMixin.createstuff(null); // Ensure this is called before any vertex buffers are created
+        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
         if (!pItemStack.isEmpty()) {
             pPoseStack.pushPose();
             boolean flag = pDisplayContext == ItemDisplayContext.GUI || pDisplayContext == ItemDisplayContext.GROUND || pDisplayContext == ItemDisplayContext.FIXED;
@@ -130,7 +131,8 @@ public abstract class ItemRendererMixin {
                             pPoseStack.popPose();
                         }
                         else if (flag1 &&  (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.UNBREAKING, pItemStack) > 0)){
-                            vertexconsumer = getUncFoilBufferDirect(pBuffer, rendertype, true, pItemStack.hasFoil());
+
+                                vertexconsumer = getUncFoilBufferDirect(pBuffer, rendertype, true, pItemStack.hasFoil());
 
                         }
                         else if (flag1) {
@@ -229,17 +231,12 @@ public abstract class ItemRendererMixin {
 
 
 
-        private static final RenderType UNCGLINT_DIRECT = RenderType.create("glint_direct", DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS, 256, RenderType.CompositeState.builder().setShaderState(RENDERTYPE_GLINT_DIRECT_SHADER).setTextureState(new RenderStateShard.TextureStateShard(ItemRenderer.ENCHANTED_GLINT_ITEM, true, false)).setWriteMaskState(COLOR_WRITE).setCullState(NO_CULL).setDepthTestState(EQUAL_DEPTH_TEST).setTransparencyState(GLINT_TRANSPARENCY).setTexturingState(GLINT_TEXTURING).createCompositeState(false));
-        private static final RenderType UNCENTITY_GLINT_DIRECT = RenderType.create("entity_glint_direct", DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS, 256, RenderType.CompositeState.builder().setShaderState(RENDERTYPE_ENTITY_GLINT_DIRECT_SHADER).setTextureState(new RenderStateShard.TextureStateShard(ENCHANTED_GLINT_ENTITY, true, false)).setWriteMaskState(COLOR_WRITE).setCullState(NO_CULL).setDepthTestState(EQUAL_DEPTH_TEST).setTransparencyState(GLINT_TRANSPARENCY).setTexturingState(ENTITY_GLINT_TEXTURING).createCompositeState(false));
+        
 
-    private static RenderType UncglintDirect() {
 
-        return UNCGLINT_DIRECT;
-    }
-    private static RenderType UncentityGlintDirect() {
 
-        return UNCENTITY_GLINT_DIRECT;
-    }
+
+
 
 
     private static RenderType createRenderType(String pName, VertexFormat pFormat, VertexFormat.Mode pMode, int pBufferSize, RenderType.CompositeState pState) {
@@ -269,7 +266,7 @@ public abstract class ItemRendererMixin {
 
 
     private static VertexConsumer getUncFoilBufferDirect(MultiBufferSource pBuffer, RenderType pRenderType, boolean pNoEntity, boolean pWithGlint) {
-        return pWithGlint ? VertexMultiConsumer.create(pBuffer.getBuffer(pNoEntity ? UncglintDirect() : UncentityGlintDirect()), pBuffer.getBuffer(pRenderType)) : pBuffer.getBuffer(pRenderType);
+        return pWithGlint ? VertexMultiConsumer.create(pBuffer.getBuffer(pNoEntity ? RenderTypeMixin.UncglintDirect() : RenderTypeMixin.UncentityGlintDirect()), pBuffer.getBuffer(pRenderType)) : pBuffer.getBuffer(pRenderType);
     }
 
     public void renderModelLists(BakedModel pModel, ItemStack pStack, int pCombinedLight, int pCombinedOverlay, PoseStack pPoseStack, VertexConsumer pBuffer) {

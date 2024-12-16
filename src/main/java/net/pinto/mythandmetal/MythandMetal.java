@@ -27,12 +27,15 @@ import net.pinto.mythandmetal.block.ModBlocks;
 import net.pinto.mythandmetal.item.ModCreativeModeTabs;
 import net.pinto.mythandmetal.item.ModItems;
 
+import net.pinto.mythandmetal.item.customfun.RenderTypeMixin;
 import net.pinto.mythandmetal.worldgen.biome.modoverworldregion.ashOverworldRegion;
 import net.pinto.mythandmetal.worldgen.biome.modoverworldregion.enchantedOverworldRegion;
 import net.pinto.mythandmetal.worldgen.biome.surface.ModSurfaceRules;
 import org.slf4j.Logger;
 import terrablender.api.Regions;
 import terrablender.api.SurfaceRuleManager;
+
+import java.lang.reflect.InvocationTargetException;
 
 
 // The value here should match an entry in the META-INF/mods.toml file
@@ -135,6 +138,7 @@ public class MythandMetal
         // Do something when the server starts
         LOGGER.info("HELLO from server starting");
     }
+
 
     // You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent
     @Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
