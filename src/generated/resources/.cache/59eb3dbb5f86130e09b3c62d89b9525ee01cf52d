@@ -1,0 +1,10 @@
+// 1.20.1	2024-12-08T02:32:57.625532	Loot Tables
+bff69678bd436f5726b498ce876a7a31c9d2b7ae data/mythandmetal/loot_tables/blocks/ash_dirt.json
+8497ed695aa2c8e6f2b60adadff4e4bbb4d44238 data/mythandmetal/loot_tables/blocks/ash_grass.json
+b62b033232503af6169fd6bcf5078098c0535bb7 data/mythandmetal/loot_tables/blocks/ash_leaves.json
+bb15bbf08aa01d50373dac3ec1279d644848cd84 data/mythandmetal/loot_tables/blocks/ash_log.json
+bd622987aa77988811408c2348e574a781162797 data/mythandmetal/loot_tables/blocks/ash_sapling.json
+09b9e8289bffa4bb7091b6d386e3dfaa279f4541 data/mythandmetal/loot_tables/blocks/enchanted_grass.json
+19c9e1ab10c1829a919dedb01e4560a6527a0eee data/mythandmetal/loot_tables/blocks/enchanted_leaves.json
+98ae914726047efecd199073cf35d658e3b0468f data/mythandmetal/loot_tables/blocks/enchanted_log.json
+058767adc25c28b13cbec9526cd18e4c3aaa6fd9 data/mythandmetal/loot_tables/blocks/enchanted_sapling.json
